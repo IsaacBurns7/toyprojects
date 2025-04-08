@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang = "en">
+<head>
+    <meta charset = "UTF-8">
+    <meta name = "viewport" content = "width=device-width, initial-scale=1.0">
+    <title>Task Management App</title>
+    <link rel = "stylesheet" href = "index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class = "logo">
+            <i class = "fas fa-tasks"></i>
+            <h1>Taskboard</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href = "dashboard.html">Dashboard</a></li>
+                <li><a href = "boards.html">My Boards</a></li>
+                <li><a href = "tasks.html">Tasks</a></li>
+            </ul>
+        </nav>
+        <div class = "user-menu">
+            <div class = "user-avatar">filled by JS</div>
+            <div class = "dropdown">
+                <a href = "profile.html">Profile</a>
+                <a href = "settings.html">Settings</a>
+                <a href = "#" id = "logout">Logout</a>
+            </div>
+        </div>
+    </header>
+    <main>
+        <div class = "board-header">
+            <h2>Project Development</h2>
+            <div class = "board-actions">
+                <button class = "btn primary"> <i class = "fas fa-plus"></i> Add task </button>
+                <button class = "btn secondary"> <i class = "fas fa-cog"></i></button>
+            </div>
+            
+            <div class = "board">
+                <!--To do column-->
+                <div class = "column">
+                    <div class = "column-header">
+                        <h3>To Do</h3>
+                        <span class = "task-count">Task Count: 3</span>
+                    </div>
+                    <div class = "task-list">
+                        <div class = "task">
+                            <div class = "task-header">
+                                <span class = "priority high">High Priority</span>
+                                <div class = "task-actions">
+                                    <i class = "fas fa-ellipsis-v"></i>
+                                </div>
+                            </div>
+                            <h4>Create design mockups</h4>
+                            <p>Create initial UI design for the dashboard</p>
+                            <div class = "task-footer">
+                                <span class = "due-date">Due: Apr 15</span>
+                                <div class = "assigned-to">assigned to jd salinger</div>
+                            </div>
+                        </div>
+
+                        <div class = "task">
+                            <div class = "task-header">
+                                <span class = "priority medium">Medium Priority</span>
+                                <div class = "task-actions">
+                                    <i class = "fas fa-ellipsis-v"></i>
+                                </div>
+                            </div>
+                            <h4>Set up database structure</h4>
+                            <p>Create MongoDB schemas for users and tasks</p>
+                            <div class = "task-footer">
+                                <span class = "due-date">Due: Apr 18</span>
+                                <div class = "assigned-to">assigned to mary shelley</div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class = "add-task-btn"><i class = "fas fa-plus"></i> Add Task</button>
+                </div>
+
+
+                <!-- In Progress Column-->
+                <div class = "column">
+                    <div class = "column-header">
+                        <h3>In Progress</h3>
+                        <span class = "task-count">Task Count: 2</span>
+                    </div>
+                    <div class = "task-list">
+                        <div class = "task">
+                            <div class = "task-header">
+                                <span class = "priority high">High Priority</span>
+                                <div class = "task-actions">
+                                    <i class = "fas fa-ellipsis-v"></i>
+                                </div>
+                            </div>
+                            <h4>Setup authentication system</h4>
+                            <p>Implement JWT authentication</p>
+                            <div class = "task-footer">
+                                <span class = "due-date">Due: Apr 10</span>
+                                <div class = "assigned-to">The dragon tyrant</div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class = "add-task-btn"><i class = "fas fa-plus"></i> Add Task</button>
+                </div>
+
+                <!--Review Column-->
+                <div class = "column">
+                    <div class="column-header">
+                        <h3>Review</h3>
+                        <span class="task-count">Task Count: 1</span>
+                    </div>
+                    <div class="task-list">
+                        <div class="task">
+                            <div class="task-header">
+                                <span class="priority medium">Medium</span>
+                                <div class="task-actions">
+                                    <i class="fas fa-ellipsis-v"></i>
+                                </div>
+                            </div>
+                            <h4>Create landing page</h4>
+                            <p>Design and implement the landing page</p>
+                            <div class="task-footer">
+                                <span class="due-date">Due: Apr 8</span>
+                                <div class="assigned-to">TK</div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="add-task-btn"><i class="fas fa-plus"></i> Add Task</button>
+                </div>
+                
+                <!--Done Column-->
+                <div class="column">
+                    <div class="column-header">
+                        <h3>Done</h3>
+                        <span class="task-count">2</span>
+                    </div>
+                    <div class="task-list">
+                        <div class="task completed">
+                            <div class="task-header">
+                                <span class="priority low">Low</span>
+                                <div class="task-actions">
+                                    <i class="fas fa-ellipsis-v"></i>
+                                </div>
+                            </div>
+                            <h4>Project setup</h4>
+                            <p>Initialize repository and setup project structure</p>
+                            <div class="task-footer">
+                                <span class="due-date">Completed: Apr 2</span>
+                                <div class="assigned-to">JS</div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="add-task-btn"><i class="fas fa-plus"></i> Add Task</button>
+                </div>   
+            </div>
+        </div>
+    </main>
+
+    <!-- Task Modal -->
+    <div class = "modal" id = "taskModal">
+        <div class = "modal-content">
+            <div class = "modal-header">
+                <h3>Add New Task</h3>
+                <button class = "close-btn">&times;</button>
+            </div>
+            <div class = "modal-body">
+                <form id = "taskForm">
+                    <div class = "form-group">
+                        <label for = "taskTitle">Title</label>
+                        <input type = "text" id = "taskTitle" placeholder = "Enter task title">
+                    </div>
+                    <div class = "form-group">
+                        <label for = "taskDescription">Description</label>
+                        <textarea id = "taskDescription" placeholder = "Enter task description"></textarea>
+                    </div>
+                    <div class = "form-row">
+                        <div class = "form-group">
+                            <label for = "taskPriority">Priority Level</label>
+                            <select id = "taskPriority">
+                                <option value = "low">Low</option>
+                                <option value = "medium" selected>Medium</option>
+                                <option value = "high">High</option>
+                            </select>
+                        </div>
+                        <div class = "form-group">
+                            <label for = "taskDueDate">Due Date</label>
+                            <input type = "date" id = "taskDueDate">
+                        </div>
+                    </div>
+                    <div class = "form-group">
+                        <label for = "taskAssignee">Assign To</label>
+                        <!--modify this select later to dropdown-->
+                        <select id = "taskAssignee">
+                            <option value = "">Select User</option>
+                            <option value = "1">John Smith</option>
+                            <option value = "2">Jane Doe</option>
+                            <option value = "3">Alex Miller</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class = "modal-footer">
+                <button class = "btn secondary">Cancel</button>
+                <button class = "btn primary">Save Task</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Taskboard. All rights reserved.</p>
+    </footer>
+</body>
+</html>

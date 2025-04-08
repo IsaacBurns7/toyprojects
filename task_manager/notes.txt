@@ -1,0 +1,4 @@
+to do
+- breakdown index html into components
+- make server and client talk yay good
+- web vitals, package.json in client
