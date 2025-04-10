@@ -2,3 +2,5 @@
 **/package.json
 **/pack-lock.json
 node_modules/
+**/launch.json
+**/.env

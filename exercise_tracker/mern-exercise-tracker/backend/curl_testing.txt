@@ -1,0 +1,26 @@
+ADD USER 
+
+curl --header "Content-Type: application/json" \
+  --request POST \
+  --data '{"username":"quincy"}' \
+  http://localhost:5000/users/add
+
+GET USERS
+
+curl -X GET \
+    -H "Content-type: application/json" \
+    -H "Accept: application/json" \
+    http://localhost:5000/users
+
+ADD EXERCISE
+
+curl --header "Content-Type: application/json" \
+  --request POST \
+  --data '{"username":"quincy", "description": "Deadlift", "duration": 12, "date": "2025-04-09T20:23:46.586Z"}' \
+  http://localhost:5000/exercises/add
+
+GET exercises
+
+curl --header "Content-Type: application/json" \
+  --request GET \
+  http://localhost:5000/exercises
