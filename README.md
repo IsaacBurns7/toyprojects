@@ -1,2 +1,2 @@
 # toyprojects
-collection of relatively simple toy projects
+collection of toy projects
