@@ -69,7 +69,7 @@ const updateWorkout = async (req, res) => {
         return res.status(404).json({error: `Workout with ID ${id} not found.`})
     }
 
-    return res.status(200).json(workout);
+    res.status(200).json(workout);
 }
 
 module.exports = {

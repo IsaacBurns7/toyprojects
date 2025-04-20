@@ -5,3 +5,5 @@ n - 0/12
 
 W217831208 
 BRD1XBOJ#3x
+
+- how to resolve backend - frontend connection using proxies, ?VPN, networking, when NOT on localhost.

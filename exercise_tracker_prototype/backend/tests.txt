@@ -7,13 +7,22 @@ curl --header "Content-Type: application/json" \
 }' \
 http://localhost:4000/api/workouts/
 
-id: 6801377b7b3db99b120f1554
+id: 6801344a90777a6fd2872b13
 
 curl --request GET \
-http://localhost:4000/api/workouts/6801377b7b3db99b120f1554
+http://localhost:4000/api/workouts/6801344a90777a6fd2872b13
 
 curl --request GET \
 http://localhost:4000/api/workouts/
 
 curl --request DELETE \
-http://localhost:4000/api/workouts/6801377b7b3db99b120f1554
+http://localhost:4000/api/workouts/6801344a90777a6fd2872b13
+
+curl --header "Content-Type: application/json" \
+--request PATCH \
+--data '{
+    "title": "Deadlift", 
+    "reps": 12, 
+    "load": 225
+}' \
+http://localhost:4000/api/workouts/6801344a90777a6fd2872b13
