@@ -1,0 +1,19 @@
+curl --header "Content-Type: application/json" \
+--request POST \
+--data '{
+    "title": "RDL", 
+    "reps": 12, 
+    "load": 225
+}' \
+http://localhost:4000/api/workouts/
+
+id: 6801377b7b3db99b120f1554
+
+curl --request GET \
+http://localhost:4000/api/workouts/6801377b7b3db99b120f1554
+
+curl --request GET \
+http://localhost:4000/api/workouts/
+
+curl --request DELETE \
+http://localhost:4000/api/workouts/6801377b7b3db99b120f1554
