@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 
 //get all workouts
 const getWorkouts = async (req, res) => {
-    console.log("GET called")
+    console.log("GET CALLED");
     const workouts = await Workout.find({}).sort({createdAt: -1});
     
     res.status(200).json(workouts);
@@ -28,6 +28,7 @@ const getWorkout = async (req, res) => {
 
 //create a new workout
 const createWorkout = async (req, res) => {
+    console.log("CREATE CALLED");
     const {title, load, reps} = req.body;
 
     try{
@@ -43,15 +44,16 @@ const deleteWorkout = async (req, res) => {
     const { id } = req.params;
 
     if(!mongoose.Types.ObjectId.isValid(id)){
-        return res.status(404).json({error: `ID ${id} is not valid. Consult mongoose documentation on valid Object IDs.`})
+        return res.status(400).json({error: `ID ${id} is not valid. Consult mongoose documentation on valid Object IDs.`})
     }
 
-    try{
-        const workout = await Workout.deleteOne({_id: id});
-        res.status(200).json(workout);
-    }catch(error){
-        res.status(400).json({error: error.message});
+    const workout = await Workout.findOneAndDelete({_id: id});
+
+    if(!workout) {
+        return res.status(400).json({error: 'No such workout'})
     }
+    
+    res.status(200).json(workout);
 }
 
 //update a workout
