@@ -1,0 +1,11 @@
+curl --header "Content-Type: application/json" \
+--request POST \
+--data '{
+    "title": "eat nuggies", 
+    "description": "40 nuggies in 10 minutes",
+    "dueDate" : "2025-04-30T15:00:00Z"
+}' \
+http://localhost:8080/api/tasks/
+
+curl --request GET \
+http://localhost:8080/api/tasks

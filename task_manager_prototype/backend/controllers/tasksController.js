@@ -1,9 +1,37 @@
+const Task = require('../models/taskModel');
+const mongoose = require('mongoose');
 
+const getTasks = async (req, res) => {
+    const tasks = await Task.find({}).sort({createdAt: -1});
 
-const getTasks = (req, res) => {
-    res.send("sending back workout!");
+    res.status(200).json(tasks);
+}
+
+const createTask = async(req, res) => {
+    const { title, description, dueDate } = req.body;
+
+    // const emptyFields = [];
+    // const expectedFields = ["title", "description", "dueDate"];
+
+    // for(const field of expectedFields){
+    //     if(!(field in req.body)){
+    //         emptyFields.push(field);
+    //     }
+    // }
+
+    // if(emptyFields){
+    //     res.status(400).json({error: "please fill in the empty fields", emptyFields});
+    // }
+
+    try{
+        const task = await Task.create({title, description, dueDate});
+        res.status(200).json(task);
+    }catch(error){
+        res.status(400).json({error: error.message});
+    }
 }
 
 module.exports = {
-    getTasks
+    getTasks, 
+    createTask
 }
