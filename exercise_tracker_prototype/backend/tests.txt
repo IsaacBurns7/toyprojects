@@ -30,7 +30,7 @@ http://localhost:4000/api/workouts/6801344a90777a6fd2872b13
 curl --header "Content-Type: application/json" \
 --request POST \
 --data '{
-    "email": "test@test.dev",
+    "email": "test@test2.dev",
     "password": "12312SFdDAF23."
 }' \
-http://localhost:4000/api/user/signup
+http://localhost:4000/api/user/login
