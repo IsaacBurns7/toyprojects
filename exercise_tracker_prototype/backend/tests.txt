@@ -34,3 +34,7 @@ curl --header "Content-Type: application/json" \
     "password": "12312SFdDAF23."
 }' \
 http://localhost:4000/api/user/login
+
+curl --request GET \
+--header "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODIwMDVmMzk1Y2FiNWY1OTk1YTE4ZDUiLCJpYXQiOjE3NDY5MjkxMzksImV4cCI6MTc0NzE4ODMzOX0.w7PN1Q4nWcdiQQG9pEZWceLtN3FwFvrYull69KIs-_w" \
+http://localhost:4000/api/workouts/
