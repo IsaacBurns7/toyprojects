@@ -10,18 +10,18 @@ const getTasks = async (req, res) => {
 const createTask = async(req, res) => {
     const { title, description, dueDate } = req.body;
 
-    // const emptyFields = [];
-    // const expectedFields = ["title", "description", "dueDate"];
+    const emptyFields = [];
+    const expectedFields = ["title", "description", "dueDate"];
 
-    // for(const field of expectedFields){
-    //     if(!(field in req.body)){
-    //         emptyFields.push(field);
-    //     }
-    // }
+    for(const field of expectedFields){
+        if(!req.body[field] || req.body[field].length == 0){
+            emptyFields.push(field);
+        }
+    }
 
-    // if(emptyFields){
-    //     res.status(400).json({error: "please fill in the empty fields", emptyFields});
-    // }
+    if(emptyFields.length > 0){
+        return res.status(400).json({error: "please fill in the empty fields", emptyFields});
+    }
 
     try{
         const task = await Task.create({title, description, dueDate});

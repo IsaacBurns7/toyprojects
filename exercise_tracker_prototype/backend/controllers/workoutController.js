@@ -31,7 +31,7 @@ const createWorkout = async (req, res) => {
     console.log("CREATE CALLED");
     const {title, load, reps} = req.body;
 
-    let emptyFields = []
+    let emptyFields = [];
     
     if(!title) { 
         emptyFields.push('title');

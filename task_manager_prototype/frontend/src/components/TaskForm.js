@@ -20,6 +20,7 @@ const TaskForm = () => {
             }
         });
         const json = await response.json();
+        console.log(json);
 
         if(!response.ok){
             setError(json.error);
@@ -31,9 +32,10 @@ const TaskForm = () => {
             setDueDate("");
             setError(null);
             setEmptyFields([]);
-            console.log("new workout added!", json);
+            console.log("new task added!", json);
             //dispatch();
         }
+        console.log(emptyFields);
     }
 
     return (
@@ -61,6 +63,7 @@ const TaskForm = () => {
                 className = {emptyFields.includes("dueDate") ? "error": ""}
             ></input>
             <button>Add Task!</button>
+            {error && <div className = "error"></div>}
         </form>
     )
 };
