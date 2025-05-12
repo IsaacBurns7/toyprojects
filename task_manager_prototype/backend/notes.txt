@@ -3,3 +3,6 @@ KwPuX445SsQ3KLrj
 
 
 TESTS
+
+curl --request DELETE \
+http://localhost:3000/6812d9ec7e78594da000022d

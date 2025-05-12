@@ -10,7 +10,13 @@ const TaskForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         
-        const task = {title, description, dueDate};
+        const [hours, minutes] = dueDate.split(':');
+        const time = new Date();
+        time.setHours[parseInt(hours)];
+        time.setMinutes(parseInt(minutes));
+        time.setSeconds(0);
+        time.setMilliseconds(0);
+        const task = {title, description, dueDate: time};
 
         const response = await fetch('/server/api/tasks', {
             method: "POST",

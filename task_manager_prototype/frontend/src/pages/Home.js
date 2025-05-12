@@ -4,24 +4,28 @@ import { useEffect, useState } from "react";
 
 import Task from "../components/Task";
 import TaskForm from "../components/TaskForm";
+import { useTasksContext } from "../hooks/useTasksContext";
 
 const Home = () => {
-    const [tasks, setTasks] = useState(null);
+    const {tasks, dispatch} = useTasksContext();
  
     useEffect(() => {
         const fetchWorkouts = async () => {
-            const response = await fetch('/server/api/tasks');
-            console.log(response);
+            const response = await fetch('/server/api/tasks', {
+                method: "GET"
+            });
             const json = await response.json();
             console.log(json);
 
             if(response.ok){
-                setTasks(json);
+                dispatch({type: "SET_TASKS", payload:json});
             }
         }
         fetchWorkouts();
 
-    }, []);
+    }, [dispatch]);
+
+    console.log(tasks);
 
     return (
         <div className = "home">
