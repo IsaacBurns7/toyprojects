@@ -1,7 +1,9 @@
 import { useTasksContext } from "../hooks/useTasksContext";
+import { useAuthContext } from "../hooks/useAuthContext";
 
 const Task = ( {task} ) => {
     const { dispatch } = useTasksContext();
+    const { user } = useAuthContext();
     const date = new Date(task.dueDate);
     const formattedDate = date.toLocaleString('en-US', {
         month: 'long',
@@ -14,7 +16,10 @@ const Task = ( {task} ) => {
 
     const handleDelete = async (req, res) => {
         const response = await fetch(`/server/api/tasks/${task._id}`, {
-            method: "DELETE"
+            method: "DELETE",
+            headers: { 
+                "Authorization": `Bearer ${user.token}`
+            }
         });
         const json = await response.json();
         console.log(json);

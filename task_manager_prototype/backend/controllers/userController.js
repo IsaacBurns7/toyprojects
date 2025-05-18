@@ -6,12 +6,13 @@ const createToken = (_id) => {
 }
 
 const loginUser = async (req, res) => {
-    const { inputField, input, password } = req.body;
+    const { identifier, password } = req.body;
     try{ 
-        const user = await User.login(inputField, input, password);
+        const user = await User.login(identifier, password);
         const token = createToken(user._id);
+        const username = user.username;
 
-        res.status(200).json({inputField: input, token});
+        res.status(200).json({username, token});
     }catch(error){
         res.status(400).json({error: error.message});
     }

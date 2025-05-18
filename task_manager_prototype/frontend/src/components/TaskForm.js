@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { useTasksContext } from '../hooks/useTasksContext';
+import { useAuthContext } from '../hooks/useAuthContext';
 
 const TaskForm = () => {
     const [title, setTitle] = useState("");
@@ -6,6 +8,8 @@ const TaskForm = () => {
     const [dueDate, setDueDate] = useState("");
     const [error, setError] = useState(null);
     const [emptyFields, setEmptyFields] = useState([]);
+    const { dispatch } = useTasksContext();
+    const { user } = useAuthContext(); 
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -18,11 +22,17 @@ const TaskForm = () => {
         time.setMilliseconds(0);
         const task = {title, description, dueDate: time};
 
+        if(!user){
+            setError("Cannot submit tasks if not logged in");
+            return;
+        }
+
         const response = await fetch('/server/api/tasks', {
             method: "POST",
             body: JSON.stringify(task),
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${user.token}`
             }
         });
         const json = await response.json();
@@ -39,7 +49,7 @@ const TaskForm = () => {
             setError(null);
             setEmptyFields([]);
             console.log("new task added!", json);
-            //dispatch();
+            dispatch({type: "CREATE_TASK", payload: json});
         }
         console.log(emptyFields);
     }
@@ -69,7 +79,7 @@ const TaskForm = () => {
                 className = {emptyFields.includes("dueDate") ? "error": ""}
             ></input>
             <button>Add Task!</button>
-            {error && <div className = "error"></div>}
+            {error && <div className = "error">{error}</div>}
         </form>
     )
 };

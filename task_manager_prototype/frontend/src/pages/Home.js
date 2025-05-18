@@ -5,14 +5,19 @@ import { useEffect, useState } from "react";
 import Task from "../components/Task";
 import TaskForm from "../components/TaskForm";
 import { useTasksContext } from "../hooks/useTasksContext";
+import { useAuthContext } from "../hooks/useAuthContext";
 
 const Home = () => {
     const {tasks, dispatch} = useTasksContext();
+    const {user} = useAuthContext();
  
     useEffect(() => {
         const fetchWorkouts = async () => {
             const response = await fetch('/server/api/tasks', {
-                method: "GET"
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${user.token}`
+                }
             });
             const json = await response.json();
             console.log(json);
@@ -21,9 +26,10 @@ const Home = () => {
                 dispatch({type: "SET_TASKS", payload:json});
             }
         }
-        fetchWorkouts();
-
-    }, [dispatch]);
+        if(user) {
+            fetchWorkouts();
+        }
+    }, [dispatch, user]);
 
     console.log(tasks);
 

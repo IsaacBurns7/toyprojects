@@ -3,6 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const tasksRouter = require('./routes/tasks');
+const userRouter = require("./routes/user");
 
 const app = express();
 
@@ -14,6 +15,7 @@ app.use((req, res, next) => {
 });
 
 app.use('/api/tasks', tasksRouter);
+app.use('/api/user', userRouter);
 
 mongoose.connect(process.env.MONGO_ATLAS_URI)
     .then(() => {

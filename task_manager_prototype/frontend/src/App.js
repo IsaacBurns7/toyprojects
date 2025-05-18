@@ -1,22 +1,15 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
 //import components
 import Navbar  from "./components/Navbar";
 import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import { useAuthContext } from './hooks/useAuthContext';
 
 function App() {
-    const dummyTask = {
-        title: "for dummies",
-        description: "stupid fucking task",
-        dueDate: Date.now(),
-        _id: 412412512551
-    }
-    const dummyTask2 = {
-        title: "for dummies 2",
-        description: "stupid fucking task 2",
-        dueDate: Date.now(),
-        _id: 41241251255,
-    }
+    const { user } = useAuthContext();
+
     return (
         <div className = "app">
             <BrowserRouter>
@@ -25,7 +18,15 @@ function App() {
                     <Routes>
                         <Route
                             path = "/"
-                            element = { <Home />}
+                            element = {user ? <Home /> : <Navigate to = "/login"/>}
+                        ></Route>
+                        <Route 
+                            path = "/login"
+                            element = {user ? <Navigate to = "/" />: <Login />}
+                        ></Route>
+                        <Route
+                            path = "/signup"
+                            element = { user ? <Navigate to = "/"/> : <Signup />}
                         ></Route>
                     </Routes>
                 </div>
