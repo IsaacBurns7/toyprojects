@@ -63,6 +63,7 @@ const attachProfessors = async () => {
             });
             professors.forEach(professor => {
                 professorString += `<div class = "row">${professor}</div>`
+
             })
             professorString += "</div>";
         }catch(error){
