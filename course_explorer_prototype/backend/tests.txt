@@ -3,6 +3,4 @@ curl --request GET \
 http://localhost:4000/api/courses/csce
 
 curl --request GET \
-http://localhost:4000/api/courses/csce && 
-curl --request GET \
-http://localhost:4000/api/courses/csce
+http://localhost:4000/api/professors/csce/110

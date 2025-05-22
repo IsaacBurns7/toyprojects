@@ -5,3 +5,5 @@ const { getProfessors
 const router = express.Router();
 
 router.get('/:dept/:number', getProfessors);
+
+module.exports = router;

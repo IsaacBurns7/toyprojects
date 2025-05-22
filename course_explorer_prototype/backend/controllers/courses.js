@@ -3,14 +3,14 @@ const cheerio = require('cheerio');
 // const mongoose = require('mongoose');
 
 const getCourses = async (req, res) => {
-    const { dept } = req.params;
-    
+    const { dept: deptRaw } = req.params;
+    const dept = deptRaw.toLowerCase();
+
     let courses = await Course.find({department: dept.toUpperCase()}).sort({number: -1});
     
     //attempt to get courses, if can't then assume invalid
     if(courses.length === 0){
         const message = [];
-
         const response = await fetch(`https://catalog.tamu.edu/undergraduate/course-descriptions/${dept}/`, {
             method: "GET"
         })

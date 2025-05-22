@@ -107,12 +107,13 @@ const getAnexData = async (dept, number) => {
     if (!anex_data || !anex_data.classes || anex_data.classes.length === 0) {
         throw new Error(`No data found for ${dept} ${number}`);
     }
-    return anex_data;
-    //fs.writeFileSync('anex.json', JSON.stringify(anex_data, null, 2));
+    // return anex_data;
+    fs.writeFileSync(`${dept}_${number}.json`, JSON.stringify(anex_data, null, 2));
 }
 
 (async () => {
-    await createHtml();
-    await attachProfessors();
+    // await createHtml();
+    // await attachProfessors();
     // await getAnexData("CSCE", "399");
+    await getAnexData("CSCE",110);
 })();
