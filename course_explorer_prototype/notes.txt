@@ -8,3 +8,14 @@ curl -X POST "https://anex.us/grades/getData/?" \
   -H "Content-Type: application/x-www-form-urlencoded" \
   --data-urlencode "dept=CSCE" \
   --data-urlencode "number=110"
+
+curl -X POST "https://compassxe-ssb.tamu.edu/StudentRegistrationSsb/ssb/searchResults/searchResults"
+  -H "Content-Type: application/json" \
+  --data '{
+  "searchTerm": "202531",
+  "subject": "CSCE",
+  "courseNumber": "",
+  "campus": "College Station"
+}'
+
+https://tamu.collegescheduler.com/api/terms/Fall%202025%20-%20College%20Station/schedules/generate
