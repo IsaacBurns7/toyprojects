@@ -9,11 +9,20 @@ module.exports = {
     },
     target: "web",
     devServer: {
-        port: "3000",
         static: ["./public"],
+        port: "3000",
+        proxy: [
+            {
+                context: ["/server"],
+                target: "http://localhost:4000",
+                changeOrigin: true,
+                secure: false,
+                pathRewrite: {"^/server": ""}
+            }
+        ],
         // open: true,
         hot: true,
-        liveReload: true
+        liveReload: true,
     },
     resolve: {
         extensions: [".js", ".jsx", ".json"]
