@@ -16,33 +16,16 @@ const courseSchema = new Schema({
         type: String,
         required: true
     },
-    //array of objects professors version
-    // professors : [{
-    //     name: String,
-    //     sections: [{
-    //         number: String,
-    //         semester: String,
-    //         gpa: Number, //expand this later to include std dev, median, etc, 
-    //     }],
-    //     reviews: [{ //expand this later to include reviews, characteristics of the professor, etc
-    //         rating: String
-    //     }]
-    // }]
-    
-    //keyed object version
-    professors: {
-        type: Map,
-        of: new Schema({
-            sections: [{
-                number: String,
-                semester: String,
-                gpa: Number
-            }],
-            reviews: [{
-                rating: String
-            }]
-        })
-    }
+    title: {
+        type: String,
+        required: true,
+    },
+    description: {
+        type: String,
+        required: true
+    },
+    professors: [String],
+    sections: [String] //[SectionSchema]
 });
 
 module.exports = mongoose.model("Course", courseSchema);

@@ -25,7 +25,7 @@ module.exports = {
         liveReload: true,
     },
     resolve: {
-        extensions: [".js", ".jsx", ".json"]
+        extensions: [".js", ".jsx", ".json", ".css"]
     },
     module: {
         rules: [
@@ -34,6 +34,12 @@ module.exports = {
                 exclude: /node_modules/,
                 use: {
                     loader: "babel-loader"
+                }
+            },
+            {
+                test: /\.css$/,
+                use: {
+                    loader: "css-loader"
                 }
             }
         ]

@@ -1,0 +1,7 @@
+
+/*
+STATE DEFINTIION
+{
+    "professors": [professorSchema]
+}
+*/

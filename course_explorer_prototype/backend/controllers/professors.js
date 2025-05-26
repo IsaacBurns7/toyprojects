@@ -1,4 +1,5 @@
 const Course = require("../models/course");
+const Professor = require("../models/professor");
 
 const getProfessors = async (req, res) => {
     const { dept: deptRaw, number } = req.params;
@@ -6,13 +7,14 @@ const getProfessors = async (req, res) => {
 
     //fetch shit from db, and if db not has, then fetch from anex
     let course = await Course.findOne({department: dept.toUpperCase(), number});
+    let courseId = course._id;
 
     if(!course){
         return res.status(400).json({error: `Course ${dept} ${number} not found.`});
     }
     let { professors } = course;
 
-    if(!professors || Object.keys(professors).length === 0){
+    if(!professors || professors.length === 0){
         const params = new URLSearchParams();
         params.append("dept", dept.toUpperCase());
         params.append("number", number);
@@ -48,12 +50,13 @@ const getProfessors = async (req, res) => {
             if(professorObj){
                 //add that shit
                 const {section, semester, year, gpa} = sectionObj;
-                professorsMap[name].sections.push({section, semester: (semester + " " + year), gpa});
+                professorsMap[name].sections.push({section, courseId, semester: (semester + " " + year), gpa});
                 //mind that reviews is still blank
             }else{
                 professorsMap[name] = {
                     sections: [{
-                        section: sectionObj.section,
+                        courseId,
+                        // section: sectionObj.section,
                         semester: sectionObj.semester + " " + sectionObj.year,
                         gpa: sectionObj.gpa
                     }],
@@ -61,9 +64,18 @@ const getProfessors = async (req, res) => {
                 };
             }
         }
-        course.professors = professorsMap;
+        
+        Object.keys(professorsMap).map(async name => {
+            const {sections, reviews} = professorsMap[name];
+            return await Professor.create({name,
+                sections,
+                reviews
+            });
+        })
+
+        course.professors = Object.keys(professorsMap);
         await course.save();
-        return res.status(200).json(professorsMap);
+        professors = course.professors;
     }
 
     return res.status(200).json(professors);

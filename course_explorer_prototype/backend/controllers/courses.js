@@ -26,8 +26,11 @@ const getCourses = async (req, res) => {
             const title = $(element).find('.courseblocktitle');
             const dept = title.text().slice(0,4);
             const number = title.text().slice(5,8);
-            try{
-                const course = await Course.create({department: dept, number});
+            const courseTitle = title.text().slice(9);
+            const desc = $(element).find(".courseblockdesc");
+            const description = desc.text();
+            try{   
+                const course = await Course.create({department: dept, number, title: courseTitle, description});
                 message.push(course);
             }catch(error){
                 message.push(error);
