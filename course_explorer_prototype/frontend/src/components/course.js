@@ -1,8 +1,11 @@
 import { useEffect } from "react";
+import { useProfessorsContext } from "../hooks/useProfessorContext";
+import { Professor } from "./professor";
 
 const Course = ( {course} ) => {
     //course is defined to follow the mongodb schema.
     const {title, description, department, number, professors} = course;
+    const { dispatch } = useProfessorsContext();
 
     useEffect(() => {
         const fetchProfessors = async () => {
@@ -10,6 +13,7 @@ const Course = ( {course} ) => {
                 method: "GET"
             });
             const json = await response.json();
+            console.log(json);
 
             if(response.ok){
                 dispatch({type: "SET_PROFESSORS", payload: json})
@@ -31,15 +35,12 @@ const Course = ( {course} ) => {
                 {`${description}`}
             </p>
 
-            <button onClick = {fetchProfessors} className = "showProfessors">
+            <button className = "showProfessors">
                 SHOW PROFESSORS
             </button>
             <div className = "professors">
-                {professors && Object.keys(professors).map(professorName => (
-                    <li key = {professorName}>
-                        <h3>{professorName}</h3>
-                        <p>Sections taught: {professors[professorName].sections.length}</p>
-                    </li>
+                {professors && professors.map(professorObj => (
+                    <Professor department = {department} number = {number}/>
                 ))}
             </div>
         </div>

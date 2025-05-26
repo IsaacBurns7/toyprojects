@@ -75,9 +75,10 @@ const getProfessors = async (req, res) => {
 
         course.professors = Object.keys(professorsMap);
         await course.save();
-        professors = course.professors;
+        return res.status(200).json(professorsMap);
     }
 
+    professors = await Professor.find({name: { $in: professors}});
     return res.status(200).json(professors);
 }
 

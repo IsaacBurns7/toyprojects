@@ -25,7 +25,7 @@ export const coursesReducer = (state, action) => {
 
 export const CoursesContextProvider = ( {children} ) => {
     const [state, dispatch] = useReducer(coursesReducer, {
-        workouts: null
+        courses: null
     });
 
     return (
