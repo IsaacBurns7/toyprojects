@@ -42,3 +42,5 @@ const professorSchema = new Schema({
         }
     ]
 })
+
+module.exports = mongoose.Model("Professor", professorSchema);

@@ -1,63 +1,11 @@
-/*
-    PROFESSOR SCHEMA 
-    {
-        info: { profId(can this override _id), name, averageGPA, totalSections, totalStudents, averageRating, totalRatings, etc},
-        sections: [{section1}, {section2}, etc],
-        ratings: [{rating1}, {rating2}, etc]
-        }
-    }
-
-    or perhaps 
-    {
-        info: {infoObj},
-        courses: [
-            {
-                courseId (based on dept and name),
-                sections: [{section1}, {section2}],
-                ratings: [{rating1}]
-            }
-        ]
-    }
-
-    note: there also will be a way to grab a professor in respect to just one class - because some professor teach one class better than others
-*/
-/*
-    DEPTARTMENT SCHEMA
-
-    [
-        {courseNumber, courseTitle, courseDescription, courseId}        
-    ]
-
-    note: no need for department id b/c the name is guaranteed to be unique, and its automatically sorted alphabetically
-*/
-/*
-    COURSE SCHEMA
-
-    {
-        info: {courseId, averageGPA, totalSections, totalStudents, averageRating, totalRatings}
-        professors: [
-            "professorName1",
-            "professorName2",
-            "professorName3"
-        ]
-    }
-    
-    OR 
-    
-    {
-        info: {infoObj},
-        professors: [
-            "professorID1",
-            "professorID2"
-        ]
-    }
-
-    note: may need to extend to preqrequisite classes and postrequisite classes (what classes need this class)
-*/
-
+const cheerio = require("cheerio");
 
 /*
-returns map of professors: {dept, number, gpa, etc, number of sections, etc}
+returns map of professors
+professorName: {
+    info: {infoObj},
+    sections; [{section1Obj}, {section2Obj}]
+}
 */
 async function getAnexData(department, number){
     const params = new URLSearchParams();
@@ -127,17 +75,64 @@ async function getAnexData(department, number){
     }
 
     return professors;
+}
+
+// const rmpEndpoint = "https://www.ratemyprofessors.com/paginate/professors/ratings?tid=" + professorId + "&filter=&courseCode=&page=";
+//tamu school id = 1003
+async function getProfessorId(schoolId, firstName, lastName){
+    const url = `https://www.ratemyprofessors.com/search/professors/${schoolId}?q=${lastName}%20${firstName}`;
+    const response = await fetch(url, {
+        method: "GET"
+    });
+    const html = await response.text();
+    const $ = cheerio.load(html);
+
+    const profCardLink = $('a.TeacherCard__StyledTeacherCard-syjs0d-0').first().attr("href"); //also account for some professors have two pages
     
+    return profCardLink;
 }
 
-function getRMPData(){
+// getProfessorId(1003, "P", "Ritchey");
 
+/*
+this follows dept schema
+*/
+async function getDepartmentCourses(department){
+    const response = await fetch(`https://catalog.tamu.edu/undergraduate/course-descriptions/${department}`,
+        {
+            method: "GET"
+        }
+    );
+    const html = await response.text();
+    const $ = cheerio.load(html);
+    const answer = [];
+
+    const deptTitle = $('.page-title').text(); //not sure what to use this for 
+
+    $('.courseblock').each((index, element) => {
+        const title = $(element).find(".courseblocktitle");
+        const description = $(element).find(".courseblockdesc");
+        const number = title.text().slice(5,8);
+
+        answer.push({
+            title: title.text(),
+            number,
+            description: description.text() //includes prerequisities and cross listings
+        });
+    });
+    console.log(answer);
+    return answer;
 }
 
-function getDepartmentCourses(){
-
-}
+getDepartmentCourses("csce");
 
 function getDegreePlan(){
 
+}
+
+module.exports = {
+    getAnexData,
+    getProfessorId,
+    getDepartmentCourses,
+    getDegreePlan
 }
