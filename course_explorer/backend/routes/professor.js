@@ -9,8 +9,10 @@ way to get professor object only pertaining to a certain {courseId} or {deptName
 const express = require('express');
 const { getProfessorsByCourse, getProfessorByName, getProfessorByCourseAndName } = require('../controllers/professor');
 
-const router = express.Router;
+const router = express.Router();
 
 router.get("/:dept/:number", getProfessorsByCourse);
 router.get("/:profName", getProfessorByName);
 router.get("/:dept/:number/:profName", getProfessorByCourseAndName );
+
+module.exports = router;

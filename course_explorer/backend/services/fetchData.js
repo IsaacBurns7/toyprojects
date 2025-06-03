@@ -37,36 +37,48 @@ async function getAnexData(department, number){
 
     const professors = new Map();
 
-    for(const section of anex_data.classes){
-        const name = section.prof;
+    for(const sectionObj of anex_data.classes){
+        const name = sectionObj.prof;
         const obj = professors[name];
+        const { number, section, ...rest} = sectionObj;
         
         let totalStudents = 0;
         const filters = ["A", "B", "C", "D", "F", "I", "Q", "S", "U", "X"];
 
         for(const filter of filters){
-            totalStudents += Number(section.filter);
+            totalStudents += Number(sectionObj[filter]);
         }
+
+        // console.log(sectionObj);
 
         if(!obj){
             professors[name] = {
                 info: {
-                    name: section.prof.name,
-                    averageGPA: gpa,
+                    name,
+                    averageGPA: sectionObj.gpa,
                     totalSections: 1,
                     totalStudents,
                 },
                 sections: [
-                    { ...section}
+                    { ...rest,
+                        courseNumber: number,
+                        sectionNumber: section   
+                    }
                 ]
             };
+            // console.log(professors[name]);
         }else{
             const { info, sections } = obj;
+            // console.log(info);
             info.totalSections += 1;
-            const totalGPA = info.averageGPA * info.totalStudents + section.gpa * totalStudents;
+            const totalGPA = info.averageGPA * info.totalStudents + sectionObj.gpa * totalStudents;
             info.totalStudents += totalStudents;
             info.averageGPA = totalGPA / info.totalStudents;
-            sections.push(section);
+            sections.push({
+                ...rest,
+                courseNumber: number,
+                sectionNumber: section
+            });
             professors[name] = {
                 info,
                 sections
@@ -124,7 +136,7 @@ async function getDepartmentCourses(department){
     return answer;
 }
 
-getDepartmentCourses("csce");
+// getDepartmentCourses("csce");
 
 function getDegreePlan(){
 

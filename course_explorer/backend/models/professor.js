@@ -16,10 +16,10 @@ const professorSchema = new Schema({
         {
             courseId: String,
             sections: [
-                {
+                {   
                     dept: String, //may not need
-                    number: Number, // may not need
-                    section: Number,
+                    courseNumber: Number, // may not need
+                    sectionNumber: Number,
                     A: Number,
                     B: Number,
                     C: Number,
@@ -41,6 +41,6 @@ const professorSchema = new Schema({
             // ]
         }
     ]
-})
+});
 
-module.exports = mongoose.Model("Professor", professorSchema);
+module.exports = mongoose.model("Professor", professorSchema);
