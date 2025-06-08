@@ -29,13 +29,32 @@ const Schema = mongoose.Schema;
 
 const courseSchema = new Schema({
     info: {
+        department: String,
+        number: Number,
         averageGPA: Number,
         totalSections: Number,
         totalStudents: Number,
         averageRating: Number,
         totalRatings: Number
     },
-    professors: [
-        String
+    professors: [String], //id or full name
+    sections: [
+        {   
+            section: Number,
+            A: Number,
+            B: Number,
+            C: Number,
+            D: Number,
+            F: Number,
+            I: Number,
+            S: Number,
+            U: Number,
+            Q: Number,
+            X: Number,
+            prof: String,
+            year: Number,
+            semester: String,
+            gpa: Number
+        }
     ]
 });

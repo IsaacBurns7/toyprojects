@@ -3,9 +3,9 @@ require('dotenv').config()
 const express = require('express');
 const mongoose = require('mongoose');
 const professorRoutes = require('./routes/professor');
-const { populateProfessors, 
-    populateCourses, 
-    populateDepartments } = require("./services/parseData");
+const { populateProfessors} = require("./services/parseData");
+    // populateCourses, 
+    // populateDepartments } = require("./services/parseData");
 
 const app = express();
 
