@@ -88,11 +88,11 @@ async function getProfessorId(schoolId, firstName, lastName){
     const $ = cheerio.load(html);
 
     const profCardLink = $('a.TeacherCard__StyledTeacherCard-syjs0d-0').first().attr("href"); //also account for some professors have two pages
-    
+    console.log(profCardLink);
     return profCardLink;
 }
 
-// getProfessorId(1003, "P", "Ritchey");
+getProfessorId(1003, "P", "Ritchey");
 
 /*
 this follows dept schema
@@ -124,7 +124,7 @@ async function getDepartmentCourses(department){
     return answer;
 }
 
-getDepartmentCourses("csce");
+// getDepartmentCourses("csce");
 
 function getDegreePlan(){
 
