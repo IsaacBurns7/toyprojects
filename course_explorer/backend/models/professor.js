@@ -12,35 +12,7 @@ const professorSchema = new Schema({
         averageRating: Number,
         totalRatings: Number,    
     },
-    courses: [  
-        {
-            courseId: String,
-            sections: [
-                {
-                    dept: String, //may not need
-                    number: Number, // may not need
-                    section: Number,
-                    A: Number,
-                    B: Number,
-                    C: Number,
-                    D: Number,
-                    F: Number,
-                    I: Number,
-                    S: Number,
-                    U: Number,
-                    Q: Number,
-                    X: Number,
-                    prof: String, //may not need
-                    year: Number,
-                    semester: String,
-                    gpa: Number
-                }
-            ],
-            // ratings: [
-            //     {}
-            // ]
-        }
-    ]
-})
+    courses: [String] //this is courseId or "{dept}{courseNumber}"
+});
 
 module.exports = mongoose.model("Professor", professorSchema);

@@ -14,3 +14,5 @@ const router = express.Router();
 router.get("/:dept/:number", getProfessorsByCourse);
 router.get("/:profName", getProfessorByName);
 router.get("/:dept/:number/:profName", getProfessorByCourseAndName );
+
+module.exports = router;

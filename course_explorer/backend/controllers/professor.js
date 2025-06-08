@@ -18,7 +18,8 @@ const getProfessorsByCourse = async (req, res) => {
 //have to use both course and professor schema for this one.
 const getProfessorByCourseAndName = async (req, res) => {
     const { dept, number, profName} = req.params;
+    return {};
 }
 
 
-module.exports = { getProfessorByName, getProfessorsByCourse };
+module.exports = { getProfessorByName, getProfessorsByCourse, getProfessorByCourseAndName };

@@ -3,6 +3,9 @@ require('dotenv').config()
 const express = require('express');
 const mongoose = require('mongoose');
 const professorRoutes = require('./routes/professor');
+const { populateProfessors} = require("./services/parseData");
+    // populateCourses, 
+    // populateDepartments } = require("./services/parseData");
 
 const app = express();
 
@@ -21,6 +24,8 @@ mongoose.connect(process.env.MONGO_ATLAS_URI)
         app.listen(process.env.PORT, () => {
             console.log("Listening for requests on PORT ", process.env.PORT);
         })
+        populateProfessors("CSCE",120);
+
     })
     .catch((error) => {
         console.log(error);
