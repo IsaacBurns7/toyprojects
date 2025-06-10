@@ -31,11 +31,14 @@ const courseSchema = new Schema({
     info: {
         department: String,
         number: Number,
+        title: String,
+        description: String,
+
         averageGPA: Number,
         totalSections: Number,
         totalStudents: Number,
         averageRating: Number,
-        totalRatings: Number
+        totalRatings: Number,
     },
     professors: [String], //id or full name
     sections: [
@@ -58,3 +61,5 @@ const courseSchema = new Schema({
         }
     ]
 });
+
+module.exports = mongoose.model("Course", courseSchema);
