@@ -43,18 +43,19 @@ async function populateProfessors(dept, number){
         const selectedProfessor = await Professor.findOne({"info.name": name });
 
         if(selectedProfessor){
-            /*
 
-            */
+            //addSectionsToProfessor();
+            //addSectionsToCourse();
 
             let newTotalGPA = selectedProfessor.info.averageGPA * selectedProfessor.info.totalStudents; //+ info.averageGPA * info.totalStudents
             let newTotalStudents = selectedProfessor.info.totalStudents;// + info.totalStudents;
             let newTotalSections = selectedProfessor.info.totalSections;
 
             //find duplicates
+
             for(section2Obj of sections){
                 if(section2Obj.dept === dept && section2Obj.courseNumber === number){
-                    const existingSection = selectedCourse.sections.find((section1Obj) => {
+                    const existingSection = course.sections.find((section1Obj) => {
                         section1Obj.section === section2Obj.section
                     });
                     if(existingSection){
@@ -67,18 +68,31 @@ async function populateProfessors(dept, number){
                     ...rest
                 });
 
-                console.log(section2Obj);
                 //section2Obj has {A, B, C, D, F, I, S, U, Q, X} biut not totalStudents, averageGPA
                 //thats causing NaN
+                const letterToGPAandHeadCount = {
+                    "A": [4,1],
+                    "B": [3,1],
+                    "C": [2,1],
+                    "D": [1,1],
+                    "F": [0,1],
+                    "I": [0,0],
+                    "S": [0,0],
+                    "U": [0,0],
+                    "Q": [0,0],
+                    "X": [0,0]
+                };
+                let sectionTotalGPA = 0;
+                let sectionTotalStudents = 0;
+                Object.entries(letterToGPAandHeadCount).forEach(([letterGrade, [gpaValue, headCount]]) => {
+                    sectionTotalGPA += section2Obj[letterGrade] * gpaValue;
+                    sectionTotalStudents += section2Obj[letterGrade] * headCount;
+                });
 
-                newTotalGPA += Number(section2Obj.averageGPA) * Number(section2Obj.totalStudents); 
-                newTotalStudents += Number(section2Obj.totalStudents);
+                newTotalGPA += sectionTotalGPA; 
+                newTotalStudents += sectionTotalStudents;
                 newTotalSections += 1;
             };
-
-            console.log(newTotalGPA);
-            console.log(newTotalStudents);
-            console.log(newTotalSections);
 
             selectedProfessor.info = { 
                 ...selectedProfessor.info, 
@@ -105,10 +119,10 @@ async function populateProfessors(dept, number){
         }
     });
 
-    const courseId = selectedCourse._id;
+    const courseId = course._id;
     // console.log(newSections);
 
-    await selectedCourse.updateOne(
+    await course.updateOne(
         {
             _id: courseId
         },
@@ -116,7 +130,86 @@ async function populateProfessors(dept, number){
     );
     console.log("populating professors finished!");
 
-    return selectedCourse;
+    return course;
+}
+
+/*
+    add sections to course and professor, 
+    and return added total GPA and students and sections
+    ?update for professor and course
+*/
+function addSectionsToProfessorAndCourse({ professor, course, sections}){ 
+    //note: currently adds sections not found in course, to both professor and course. 
+    //      Could separate in the future to add separate sections to professor / course
+    //      and perhaps make new function that explicitly updates existing sections. 
+    let addedSections = []; 
+
+    let totalGPA = 0;
+    let totalStudents = 0;
+    let totalSections = sections.length;
+    const { dept, number } = course.info;
+
+    //find duplicates
+
+    for(const section2Obj of sections){
+        if(section2Obj.dept === dept && section2Obj.courseNumber === number){
+            const existingSection = course.sections.find((section1Obj) => {
+                section1Obj.section === section2Obj.section
+            });
+            if(existingSection){
+                continue;
+            }
+        }
+        const { sectionDept, sectionNumber, ...rest} = section2Obj;
+
+        addedSections.push({
+            ...rest
+        });
+
+        //section2Obj has {A, B, C, D, F, I, S, U, Q, X} biut not totalStudents, averageGPA
+        //thats causing NaN
+        const letterToGPAandHeadCount = {
+            "A": [4,1],
+            "B": [3,1],
+            "C": [2,1],
+            "D": [1,1],
+            "F": [0,1],
+            "I": [0,0],
+            "S": [0,0],
+            "U": [0,0],
+            "Q": [0,0],
+            "X": [0,0]
+        };
+        let sectionTotalGPA = 0;
+        let sectionTotalStudents = 0;
+        Object.entries(letterToGPAandHeadCount).forEach(([letterGrade, [gpaValue, headCount]]) => {
+            sectionTotalGPA += section2Obj[letterGrade] * gpaValue;
+            sectionTotalStudents += section2Obj[letterGrade] * headCount;
+        });
+
+        totalGPA += sectionTotalGPA; 
+        totalStudents += sectionTotalStudents;
+    };
+
+    //update professor to reflect new changes
+    //update course to reflect new changes
+
+    professor.info = { 
+        ...professor.info, 
+        averageGPA: (newTotalGPA / newTotalStudents),
+        totalStudents: newTotalStudents, 
+        totalSections: newTotalSections
+    };
+
+    
+    if(professor.courses.filter((key) => key === courseKey).length === 0){
+        professor.courses.push(courseKey);
+    }
+    if(!newProfessors.find(key => key = professorKey)){
+        newProfessors.push(professorKey);
+    }
+
+    
 }
 
 async function populateCourses(deptRaw) {
