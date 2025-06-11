@@ -23,7 +23,7 @@ const departmentSchema = new Schema({
             courseNumber: Number,
             courseTitle: String,
             courseDescription: String,
-            //courseId: String  //may need later for faster queries
+            courseId: String  
         }
     ]
 });

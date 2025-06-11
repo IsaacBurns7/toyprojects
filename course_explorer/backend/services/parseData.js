@@ -10,10 +10,9 @@ const cheerio = require("cheerio");
 
 
 //later update ratings aswell    
-async function populateProfessors(dept, number){
+async function populateSectionsForCourse(dept, number){
     const professorMap = await getAnexData(dept, number);
     let selectedCourse = await Course.findOne({"info.department": dept, "info.number": number});
-    const courseKey = `${dept}${number}`;
 
     if(!selectedCourse){
         let professors = [];
@@ -30,107 +29,25 @@ async function populateProfessors(dept, number){
         selectedCourse = await Course.create({info, professors, sections})
     }
 
-    let newTotalGPACourse = selectedCourse.info.averageGPA * selectedCourse.info.totalStudents; 
-    let newTotalStudentsCourse = selectedCourse.info.students;
-    let newTotalSectionsCourse = 0;
-
-    let newSections = selectedCourse.sections;
-    let newProfessors = selectedCourse.professors;
-
-    Object.entries(professorMap).forEach(async (entry) => {
+    for(const entry of Object.entries(professorMap)){
         const name = entry[0];
         const {info, sections} = entry[1];
-        const selectedProfessor = await Professor.findOne({"info.name": name });
-
-        if(selectedProfessor){
-
-            //addSectionsToProfessor();
-            //addSectionsToCourse();
-
-            let newTotalGPA = selectedProfessor.info.averageGPA * selectedProfessor.info.totalStudents; //+ info.averageGPA * info.totalStudents
-            let newTotalStudents = selectedProfessor.info.totalStudents;// + info.totalStudents;
-            let newTotalSections = selectedProfessor.info.totalSections;
-
-            //find duplicates
-
-            for(section2Obj of sections){
-                if(section2Obj.dept === dept && section2Obj.courseNumber === number){
-                    const existingSection = course.sections.find((section1Obj) => {
-                        section1Obj.section === section2Obj.section
-                    });
-                    if(existingSection){
-                        continue;
-                    }
-                }
-                const { sectionDept, sectionNumber, ...rest} = section2Obj;
-
-                newSections.push({
-                    ...rest
-                });
-
-                //section2Obj has {A, B, C, D, F, I, S, U, Q, X} biut not totalStudents, averageGPA
-                //thats causing NaN
-                const letterToGPAandHeadCount = {
-                    "A": [4,1],
-                    "B": [3,1],
-                    "C": [2,1],
-                    "D": [1,1],
-                    "F": [0,1],
-                    "I": [0,0],
-                    "S": [0,0],
-                    "U": [0,0],
-                    "Q": [0,0],
-                    "X": [0,0]
-                };
-                let sectionTotalGPA = 0;
-                let sectionTotalStudents = 0;
-                Object.entries(letterToGPAandHeadCount).forEach(([letterGrade, [gpaValue, headCount]]) => {
-                    sectionTotalGPA += section2Obj[letterGrade] * gpaValue;
-                    sectionTotalStudents += section2Obj[letterGrade] * headCount;
-                });
-
-                newTotalGPA += sectionTotalGPA; 
-                newTotalStudents += sectionTotalStudents;
-                newTotalSections += 1;
-            };
-
-            selectedProfessor.info = { 
-                ...selectedProfessor.info, 
-                averageGPA: (newTotalGPA / newTotalStudents),
-                totalStudents: newTotalStudents, 
-                totalSections: newTotalSections
-            };
-            newTotalGPACourse += newTotalGPA;
-            newTotalStudentsCourse += newTotalStudents;
-            newTotalSectionsCourse += newTotalSections;
-
-            const professorKey = name;
-            
-            if(selectedProfessor.courses.filter((key) => key === courseKey).length === 0){
-                selectedProfessor.courses.push(courseKey);
-            }
-            if(!newProfessors.find(key => key = professorKey)){
-                newProfessors.push(professorKey);
-            }
-
-            await selectedProfessor.save();
+        let selectedProfessor = await Professor.findOne({"info.name": name });
+        if(!selectedProfessor){
+            selectedProfessor = await Professor.create({info: {
+                name,
+                averageGPA: 4.00,
+                totalSections: 0,
+                totalStudents: 0,
+                averageRating: 5.00,
+                totalRatings: 0
+            }});
+            await addSectionsToProfessorAndCourse({ professor: selectedProfessor, sections, course: selectedCourse});
         }else{
-            const newProfessor = await Professor.create({info, courses: [courseKey]});
+            await addSectionsToProfessorAndCourse({ professor: selectedProfessor, sections, course: selectedCourse});
         }
-    });
+    };
 
-    const courseId = course._id;
-    // console.log(newSections);
-
-    await course.updateOne(
-        {
-            _id: courseId
-        },
-        { sections: newSections, professors: newProfessors}
-    );
-    console.log("populating professors finished!");
-
-    return course;
 }
 
 /*
@@ -138,7 +55,7 @@ async function populateProfessors(dept, number){
     and return added total GPA and students and sections
     ?update for professor and course
 */
-function addSectionsToProfessorAndCourse({ professor, course, sections}){ 
+async function addSectionsToProfessorAndCourse({ professor, course, sections}){ 
     //note: currently adds sections not found in course, to both professor and course. 
     //      Could separate in the future to add separate sections to professor / course
     //      and perhaps make new function that explicitly updates existing sections. 
@@ -160,10 +77,12 @@ function addSectionsToProfessorAndCourse({ professor, course, sections}){
                 continue;
             }
         }
-        const { sectionDept, sectionNumber, ...rest} = section2Obj;
+        // console.log(section2Obj);
+        const { dept: dept2, courseNumber, ...rest} = section2Obj;
 
         addedSections.push({
-            ...rest
+            ...rest,
+            section: section2Obj.sectionNumber
         });
 
         //section2Obj has {A, B, C, D, F, I, S, U, Q, X} biut not totalStudents, averageGPA
@@ -192,22 +111,47 @@ function addSectionsToProfessorAndCourse({ professor, course, sections}){
     };
 
     //update professor to reflect new changes
-    //update course to reflect new changes
+    const professorId = professor._id;
+    const courseId = course._id;
+    const professorNewAverageGPA = (professor.info.averageGPA * professor.info.totalStudents + totalGPA) / (professor.info.totalStudents + totalStudents); 
+    await Professor.updateOne(
+        {
+            _id: professorId
+        },
+        { 
+            // sections: [...professor.sections, ...addedSections],
+            info: {
+                ...professor.info,
+                averageGPA: professorNewAverageGPA,
+                totalStudents: totalStudents + professor.info.totalStudents,
+                totalSections: totalSections + professor.info.totalSections
+            },
+            $addToSet: {
+                courses: courseId
+            }
+        }
+    );
+    // console.log("updated professor");
 
-    professor.info = { 
-        ...professor.info, 
-        averageGPA: (newTotalGPA / newTotalStudents),
-        totalStudents: newTotalStudents, 
-        totalSections: newTotalSections
-    };
+    const courseNewAverageGPA = (course.info.averageGPA * course.info.totalStudents + totalGPA) / (course.info.totalStudents + totalStudents);
+    await Course.updateOne(
+        {
+            _id: courseId
+        },
+        {
+            $set: {
+                "info.averageGPA": courseNewAverageGPA,
+                "info.totalStudents": totalStudents + course.info.totalStudents,
+                "info.totalSections": totalSections + course.info.totalSections,
+                sections: [...course.sections, ...addedSections]
 
-    
-    if(professor.courses.filter((key) => key === courseKey).length === 0){
-        professor.courses.push(courseKey);
-    }
-    if(!newProfessors.find(key => key = professorKey)){
-        newProfessors.push(professorKey);
-    }
+            },
+            $addToSet: {
+                professors: professorId
+            }
+        }
+    );
+    console.log("updated course");
 
     
 }
@@ -272,7 +216,7 @@ async function populateDepartments() {
 
 }
 
-module.exports = { populateProfessors, 
+module.exports = { populateSectionsForCourse, 
     populateCourses, 
     populateDepartments    
 }

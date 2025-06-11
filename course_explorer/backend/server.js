@@ -5,7 +5,8 @@ const mongoose = require('mongoose');
 const professorRoutes = require('./routes/professor');
 const { populateProfessors, 
     populateCourses, 
-    populateDepartments } = require("./services/parseData");
+    populateDepartments, 
+    populateSectionsForCourse} = require("./services/parseData");
 const { populate } = require('./models/course');
 
 const app = express();
@@ -26,7 +27,7 @@ mongoose.connect(process.env.MONGO_ATLAS_URI)
             console.log("Listening for requests on PORT ", process.env.PORT);
         })
         // populateCourses("CSCE");
-        populateProfessors("CSCE",120);
+        populateSectionsForCourse("CSCE",120);
 
     })
     .catch((error) => {

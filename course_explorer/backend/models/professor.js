@@ -12,7 +12,7 @@ const professorSchema = new Schema({
         averageRating: Number,
         totalRatings: Number,    
     },
-    courses: [String] //this is courseId or "{dept}{courseNumber}"
+    courses: [String] //this is courseId,
 });
 
 module.exports = mongoose.model("Professor", professorSchema);

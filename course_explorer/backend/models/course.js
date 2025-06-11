@@ -40,7 +40,7 @@ const courseSchema = new Schema({
         averageRating: Number,
         totalRatings: Number,
     },
-    professors: [String], //id or full name
+    professors: [String], //professorId
     sections: [
         {   
             section: Number,
