@@ -50,44 +50,46 @@ const App = () => {
     return (
         <div className = "app">
             {professors && professors.map((professor) => (
-                <div class="professor-card">
-                    <div class="card-header">
-                        <h1 class="professor-name">{professor.info.name}</h1>
-                        <div class="years-taught">Teaching for {professor.info.yearsTaught} years</div>
+            <div key={professor.id} className="professor-card bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                <div className="card-header bg-blue-600 p-4 text-white">
+                    <h1 className="professor-name text-xl font-bold">{professor.info.name}</h1>
+                    <div className="years-taught text-blue-100">Teaching for {professor.info.yearsTaught} years</div>
+                </div>
+                <div className="card-body p-4">
+                    <div className="rating flex items-center mb-4">
+                    <span className="rating-value text-3xl font-bold mr-2">{professor.info.averageRating}</span>
+                    <div className="stars text-yellow-400 text-xl">★★★★★</div>
                     </div>
-                    <div class="card-body">
-                        <div class="rating">
-                            <span class="rating-value">{professor.info.averageRating}</span>
-                            <div class="stars">★★★★★</div>
-                        </div>
-                        
-                        <div class="stats-container">
-                            <div class="stat-item">
-                                <div class="stat-value">{professor.info.averageGPA}</div>
-                                <div class="stat-label">Average GPA</div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-value">{professor.info.totalStudents}</div>
-                                <div class="stat-label">Students</div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-value">{professor.info.totalSections}</div>
-                                <div class="stat-label">Sections</div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-value">{professor.info.totalRatings}</div>
-                                <div class="stat-label">Ratings</div>
-                            </div>
-                        </div>
-                        
-                        <div class="courses-title">Courses Taught</div>
-                        <div class="courses-list">
-                            {professor.courses.map((courseId) => (
-                                <span class="course-tag">{courseId}</span>
-                            ))}
-                        </div>
+                    
+                    <div className="stats-container grid grid-cols-4 gap-2 mb-4">
+                    <div className="stat-item bg-gray-100 p-2 rounded text-center">
+                        <div className="stat-value font-bold text-blue-600">{professor.info.averageGPA}</div>
+                        <div className="stat-label text-xs text-gray-600">Average GPA</div>
+                    </div>
+                    <div className="stat-item bg-gray-100 p-2 rounded text-center">
+                        <div className="stat-value font-bold text-blue-600">{professor.info.totalStudents}</div>
+                        <div className="stat-label text-xs text-gray-600">Students</div>
+                    </div>
+                    <div className="stat-item bg-gray-100 p-2 rounded text-center">
+                        <div className="stat-value font-bold text-blue-600">{professor.info.totalSections}</div>
+                        <div className="stat-label text-xs text-gray-600">Sections</div>
+                    </div>
+                    <div className="stat-item bg-gray-100 p-2 rounded text-center">
+                        <div className="stat-value font-bold text-blue-600">{professor.info.totalRatings}</div>
+                        <div className="stat-label text-xs text-gray-600">Ratings</div>
+                    </div>
+                    </div>
+                    
+                    <div className="courses-title font-semibold text-gray-700 mb-2">Courses Taught</div>
+                    <div className="courses-list flex flex-wrap gap-2">
+                    {professor.courses.map((courseId) => (
+                        <span key={courseId} className="course-tag bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">
+                        {courseId}
+                        </span>
+                    ))}
                     </div>
                 </div>
+            </div>
             ))}
         </div>
     );
